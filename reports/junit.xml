@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="4" time="2217.160" timestamp="2023-10-27T06:39:23.967114" hostname="DESKTOP-ES4UKG1"><testcase classname="tests.model.test_model.TestModel" name="test_model_fit" time="544.434" /><testcase classname="tests.model.test_model.TestModel" name="test_model_predict" time="549.398" /><testcase classname="tests.model.test_model.TestModel" name="test_model_preprocess_for_serving" time="549.991" /><testcase classname="tests.model.test_model.TestModel" name="test_model_preprocess_for_training" time="563.461"><failure message="AssertionError: assert False&#10; +  where False = isinstance(0        0\n1        0\n2        0\n3        0\n4        0\n        ..\n68201    1\n68202    1\n68203    1\n68204    0\n68205    0\nName: delay, Length: 68206, dtype: int32, &lt;class 'pandas.core.frame.DataFrame'&gt;)&#10; +    where &lt;class 'pandas.core.frame.DataFrame'&gt; = pd.DataFrame">self = &lt;tests.model.test_model.TestModel testMethod=test_model_preprocess_for_training&gt;
+
+    def test_model_preprocess_for_training(
+        self
+    ):
+        features, target = self.model.preprocess(
+            data=self.data,
+            target_column="delay"
+        )
+    
+        assert isinstance(features, pd.DataFrame)
+        assert features.shape[1] == len(self.FEATURES_COLS)
+        assert set(features.columns) == set(self.FEATURES_COLS)
+    
+&gt;       assert isinstance(target, pd.DataFrame)
+E       AssertionError: assert False
+E        +  where False = isinstance(0        0\n1        0\n2        0\n3        0\n4        0\n        ..\n68201    1\n68202    1\n68203    1\n68204    0\n68205    0\nName: delay, Length: 68206, dtype: int32, &lt;class 'pandas.core.frame.DataFrame'&gt;)
+E        +    where &lt;class 'pandas.core.frame.DataFrame'&gt; = pd.DataFrame
+
+tests\model\test_model.py:46: AssertionError</failure></testcase></testsuite></testsuites>
