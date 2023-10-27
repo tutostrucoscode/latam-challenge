@@ -89,9 +89,10 @@ class DelayModel:
 
     def __init__(self):
         self._model = None  # Model should be saved in this attribute.
-        data = pd.read_csv('G:/challenge_MLE/data/data.csv')
-        data.info()
-        features, target = self.preprocess(data, target_column='delay')
+        ##data = pd.read_csv('../data/data.csv')
+        self.data = None
+        self.data.info()
+        features, target = self.preprocess(self.data, target_column='delay')
         self.fit(features, target)
 
     # Prepare raw data for training or predict.
@@ -103,20 +104,22 @@ class DelayModel:
     # or
     # pd.DataFrame: features.
     def preprocess(self, data: pd.DataFrame, target_column: str = None) -> Union[Tuple[pd.DataFrame, pd.DataFrame], pd.DataFrame]:
-        data['period_day'] = data['Fecha-I'].apply(get_period_day)
-        data['high_season'] = data['Fecha-I'].apply(is_high_season)
-        data['min_diff'] = data.apply(get_min_diff, axis=1)
+        self.data = data
+        
+        self.data['period_day'] = self.data['Fecha-I'].apply(get_period_day)
+        self.data['high_season'] = self.data['Fecha-I'].apply(is_high_season)
+        self.data['min_diff'] = data.apply(get_min_diff(self.data), axis=1)
         threshold_in_minutes = 15
-        data['delay'] = np.where(data['min_diff'] > threshold_in_minutes, 1, 0)
+        self.data['delay'] = np.where(self.data['min_diff'] > threshold_in_minutes, 1, 0)
         data.columns
 
-        self.data_analysis(data)
-        self.calculate_delay_rate_by_column(data)
+        self.data_analysis(self.data)
+        self.calculate_delay_rate_by_column(self.data)
 
         features = pd.concat([
-            pd.get_dummies(data['OPERA'], prefix='OPERA'),
-            pd.get_dummies(data['TIPOVUELO'], prefix='TIPOVUELO'),
-            pd.get_dummies(data['MES'], prefix='MES')],
+            pd.get_dummies(self.data['OPERA'], prefix='OPERA'),
+            pd.get_dummies(self.data['TIPOVUELO'], prefix='TIPOVUELO'),
+            pd.get_dummies(self.data['MES'], prefix='MES')],
             axis=1
         )
 
@@ -135,7 +138,7 @@ class DelayModel:
         features = features[expected_columns]
 
         if target_column:
-            target = data[target_column].to_frame()
+            target = self.data[target_column].to_frame()
             return (features, target)
         else:
             return features
