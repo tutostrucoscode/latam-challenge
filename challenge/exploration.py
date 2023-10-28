@@ -320,12 +320,12 @@ from sklearn.metrics import confusion_matrix, classification_report
 training_data = shuffle(data[['OPERA', 'MES', 'TIPOVUELO', 'SIGLADES', 'DIANOM', 'delay']], random_state = 111)
 
 # %%
-features = pd.concat([
-    pd.get_dummies(data['OPERA'], prefix = 'OPERA'),
-    pd.get_dummies(data['TIPOVUELO'], prefix = 'TIPOVUELO'), 
-    pd.get_dummies(data['MES'], prefix = 'MES')], 
-    axis = 1
-)
+    features = pd.concat([
+        pd.get_dummies(data['OPERA'], prefix = 'OPERA'),
+        pd.get_dummies(data['TIPOVUELO'], prefix = 'TIPOVUELO'), 
+        pd.get_dummies(data['MES'], prefix = 'MES')], 
+        axis = 1
+    )
 target = data['delay']
 
 # %%

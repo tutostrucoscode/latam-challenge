@@ -78,21 +78,22 @@ class DelayModel:
         self._data = None
 
     def preprocess(self, data: pd.DataFrame, target_column: str = None) -> Union[Tuple[pd.DataFrame, pd.DataFrame], pd.DataFrame]:
-        data['period_day'] = data['Fecha-I'].apply(get_period_day)
-        data['high_season'] = data['Fecha-I'].apply(is_high_season)
-        data['min_diff'] = data.apply(get_min_diff, axis=1)
-        threshold_in_minutes = 15
-        data['delay'] = np.where(data['min_diff'] > threshold_in_minutes, 1, 0)
+        if 'Fecha-I' in data:
+            data['period_day'] = data['Fecha-I'].apply(get_period_day)
+            data['high_season'] = data['Fecha-I'].apply(is_high_season)
+            data['min_diff'] = data.apply(get_min_diff, axis=1)
+            threshold_in_minutes = 15
+            data['delay'] = np.where(
+                data['min_diff'] > threshold_in_minutes, 1, 0)
 
         features = pd.concat([
             pd.get_dummies(data['OPERA'], prefix='OPERA'),
             pd.get_dummies(data['TIPOVUELO'], prefix='TIPOVUELO'),
-            pd.get_dummies(data['MES'], prefix='MES'),
-            pd.get_dummies(data['period_day'], prefix='PERIODO_dia'),
-            pd.get_dummies(data['AÑO'], prefix='AÑO')
+            pd.get_dummies(data['MES'], prefix='MES')
         ], axis=1)
 
-        features = features[self.top_10_features]
+        present_features = set(features.columns) & set(self.top_10_features)
+        features = features[list(present_features)]
 
         self._data = data
         features.info()
@@ -105,12 +106,13 @@ class DelayModel:
 
         return features
 
-    def fit(self, features: pd.DataFrame, target: pd.DataFrame) -> None:
-        x_train, x_test, y_train, y_test, xgb_model = self.prepare_data_and_model(
-            features, target)
-        xgb_model.fit(x_train, y_train)
+    def fit(self, features: pd.DataFrame, target: pd.DataFrame = None) -> None:
+        if target:
+            x_train, x_test, y_train, y_test, xgb_model = self.prepare_data_and_model(
+                features, target)
+            xgb_model.fit(x_train, y_train)
 
-        self._model = xgb_model
+            self._model = xgb_model
         return
 
     def predict(self, features: pd.DataFrame) -> List[int]:
