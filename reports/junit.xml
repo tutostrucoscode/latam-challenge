@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="4" time="2217.160" timestamp="2023-10-27T06:39:23.967114" hostname="DESKTOP-ES4UKG1"><testcase classname="tests.model.test_model.TestModel" name="test_model_fit" time="544.434" /><testcase classname="tests.model.test_model.TestModel" name="test_model_predict" time="549.398" /><testcase classname="tests.model.test_model.TestModel" name="test_model_preprocess_for_serving" time="549.991" /><testcase classname="tests.model.test_model.TestModel" name="test_model_preprocess_for_training" time="563.461"><failure message="AssertionError: assert False&#10; +  where False = isinstance(0        0\n1        0\n2        0\n3        0\n4        0\n        ..\n68201    1\n68202    1\n68203    1\n68204    0\n68205    0\nName: delay, Length: 68206, dtype: int32, &lt;class 'pandas.core.frame.DataFrame'&gt;)&#10; +    where &lt;class 'pandas.core.frame.DataFrame'&gt; = pd.DataFrame">self = &lt;tests.model.test_model.TestModel testMethod=test_model_preprocess_for_training&gt;
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="4" time="467.624" timestamp="2023-10-28T05:12:29.710634" hostname="DESKTOP-ES4UKG1"><testcase classname="tests.model.test_model.TestModel" name="test_model_fit" time="114.458"><failure message="assert 0.9995626981523997 &lt; 0.6">self = &lt;tests.model.test_model.TestModel testMethod=test_model_fit&gt;
 
-    def test_model_preprocess_for_training(
+    def test_model_fit(
         self
     ):
         features, target = self.model.preprocess(
@@ -8,13 +8,22 @@
             target_column="delay"
         )
     
-        assert isinstance(features, pd.DataFrame)
-        assert features.shape[1] == len(self.FEATURES_COLS)
-        assert set(features.columns) == set(self.FEATURES_COLS)
+        _, features_validation, _, target_validation = train_test_split(
+            features, target, test_size=0.33, random_state=42)
     
-&gt;       assert isinstance(target, pd.DataFrame)
-E       AssertionError: assert False
-E        +  where False = isinstance(0        0\n1        0\n2        0\n3        0\n4        0\n        ..\n68201    1\n68202    1\n68203    1\n68204    0\n68205    0\nName: delay, Length: 68206, dtype: int32, &lt;class 'pandas.core.frame.DataFrame'&gt;)
-E        +    where &lt;class 'pandas.core.frame.DataFrame'&gt; = pd.DataFrame
+        self.model.fit(
+            features=features,
+            target=target
+        )
+    
+        predicted_target = self.model._model.predict(
+            features_validation
+        )
+    
+        report = classification_report(
+            target_validation, predicted_target, output_dict=True)
+    
+&gt;       assert report["0"]["recall"] &lt; 0.60
+E       assert 0.9995626981523997 &lt; 0.6
 
-tests\model\test_model.py:46: AssertionError</failure></testcase></testsuite></testsuites>
+tests\model\test_model.py:84: AssertionError</failure></testcase><testcase classname="tests.model.test_model.TestModel" name="test_model_predict" time="115.383" /><testcase classname="tests.model.test_model.TestModel" name="test_model_preprocess_for_serving" time="117.653" /><testcase classname="tests.model.test_model.TestModel" name="test_model_preprocess_for_training" time="113.509" /></testsuite></testsuites>

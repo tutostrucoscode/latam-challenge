@@ -29,7 +29,7 @@ class TestModel(unittest.TestCase):
         super().setUp()
         self.model = DelayModel()
         self.data = pd.read_csv(
-            filepath_or_buffer="G:/challenge_MLE/data/data.csv")
+            filepath_or_buffer="G:/latam-challenge/data/data.csv")
 
     def test_model_preprocess_for_training(
         self
