@@ -48,4 +48,4 @@ async def post_predict(flight: FlightList) -> dict:
         # Registra el error para poder ver los detalles en los logs del servidor
         logging.error(f"Error al procesar la solicitud: {e}")
         # Devuelve un mensaje de error descriptivo
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e))

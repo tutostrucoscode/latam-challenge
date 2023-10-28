@@ -1,1 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="4" time="6.813" timestamp="2023-10-28T07:54:11.585195" hostname="DESKTOP-ES4UKG1"><testcase classname="tests.api.test_api.TestBatchPipeline" name="test_should_failed_unkown_column_1" time="0.037" /><testcase classname="tests.api.test_api.TestBatchPipeline" name="test_should_failed_unkown_column_2" time="0.013" /><testcase classname="tests.api.test_api.TestBatchPipeline" name="test_should_failed_unkown_column_3" time="0.013" /><testcase classname="tests.api.test_api.TestBatchPipeline" name="test_should_get_predict" time="0.039" /></testsuite></testsuites>
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="4" time="7.220" timestamp="2023-10-28T19:12:40.497432" hostname="DESKTOP-ES4UKG1"><testcase classname="tests.api.test_api.TestBatchPipeline" name="test_should_failed_unkown_column_1" time="0.040"><failure message="AssertionError: 500 != 400">self = &lt;tests.api.test_api.TestBatchPipeline testMethod=test_should_failed_unkown_column_1&gt;
+
+    def test_should_failed_unkown_column_1(self):
+        data = {
+            "flights": [
+                {
+                    "OPERA": "Aerolineas Argentinas",
+                    "TIPOVUELO": "N",
+                    "MES": 13
+                }
+            ]
+        }
+        # when("xgboost.XGBClassifier").predict(ANY).thenReturn(np.array([0]))# change this line to the model of chosing
+        response = self.client.post("/predict", json=data)
+&gt;       self.assertEqual(response.status_code, 400)
+E       AssertionError: 500 != 400
+
+tests\api\test_api.py:38: AssertionError</failure></testcase><testcase classname="tests.api.test_api.TestBatchPipeline" name="test_should_failed_unkown_column_2" time="0.014"><failure message="AssertionError: 500 != 400">self = &lt;tests.api.test_api.TestBatchPipeline testMethod=test_should_failed_unkown_column_2&gt;
+
+    def test_should_failed_unkown_column_2(self):
+        data = {
+            "flights": [
+                {
+                    "OPERA": "Aerolineas Argentinas",
+                    "TIPOVUELO": "O",
+                    "MES": 13
+                }
+            ]
+        }
+        # when("xgboost.XGBClassifier").predict(ANY).thenReturn(np.array([0]))# change this line to the model of chosing
+        response = self.client.post("/predict", json=data)
+&gt;       self.assertEqual(response.status_code, 400)
+E       AssertionError: 500 != 400
+
+tests\api\test_api.py:52: AssertionError</failure></testcase><testcase classname="tests.api.test_api.TestBatchPipeline" name="test_should_failed_unkown_column_3" time="0.014"><failure message="AssertionError: 500 != 400">self = &lt;tests.api.test_api.TestBatchPipeline testMethod=test_should_failed_unkown_column_3&gt;
+
+    def test_should_failed_unkown_column_3(self):
+        data = {
+            "flights": [
+                {
+                    "OPERA": "Argentinas",
+                    "TIPOVUELO": "O",
+                    "MES": 13
+                }
+            ]
+        }
+        # when("xgboost.XGBClassifier").predict(ANY).thenReturn(np.array([0]))
+        response = self.client.post("/predict", json=data)
+&gt;       self.assertEqual(response.status_code, 400)
+E       AssertionError: 500 != 400
+
+tests\api\test_api.py:66: AssertionError</failure></testcase><testcase classname="tests.api.test_api.TestBatchPipeline" name="test_should_get_predict" time="0.040" /></testsuite></testsuites>
