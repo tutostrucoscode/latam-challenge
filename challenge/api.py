@@ -35,8 +35,9 @@ async def post_predict(flight: FlightList) -> dict:
         if any(data['MES'] > 12):
             raise HTTPException(
                 status_code=400, detail="Invalid month value in column.")
-        if any(data['Fecha-I']) and any(data['Fecha-O']):
-            target_column = "delay"
+        if 'Fecha-I' in data.columns and 'Fecha-O' in data.columns:
+            if any(data['Fecha-I']) and any(data['Fecha-O']):
+                target_column = "delay"
 
         features = model.preprocess(data, target_column)
         model.fit(features)
