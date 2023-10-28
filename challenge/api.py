@@ -1,3 +1,4 @@
+import logging
 from fastapi import FastAPI, HTTPException
 import pandas as pd
 from pydantic import BaseModel
@@ -27,17 +28,24 @@ async def get_health() -> dict:
 
 @app.post("/predict", status_code=200)
 async def post_predict(flight: FlightList) -> dict:
-    target_column = None
-    model = DelayModel()
-    data = pd.DataFrame([dict(f) for f in flight.flights])
-    if any(data['MES'] > 12):
-        raise HTTPException(
-            status_code=400, detail="Invalid month value in column.")
-    if any(data['Fecha-I']) and any(data['Fecha-O']):
-        target_column = "delay"
+    try:
+        target_column = None
+        model = DelayModel()
+        data = pd.DataFrame([dict(f) for f in flight.flights])
+        if any(data['MES'] > 12):
+            raise HTTPException(
+                status_code=400, detail="Invalid month value in column.")
+        if 'Fecha-I' in data.columns and 'Fecha-O' in data.columns:
+            if any(data['Fecha-I']) and any(data['Fecha-O']):
+                target_column = "delay"
 
-    features = model.preprocess(data, target_column)
-    model.fit(features)
-    predictions = model.predict(features)
+        features = model.preprocess(data, target_column)
+        model.fit(features)
+        predictions = model.predict(features)
 
-    return {"predict": predictions}
+        return {"predict": predictions}
+    except Exception as e:
+        # Registra el error para poder ver los detalles en los logs del servidor
+        logging.error(f"Error al procesar la solicitud: {e}")
+        # Devuelve un mensaje de error descriptivo
+        raise HTTPException(status_code=400, detail=str(e))
