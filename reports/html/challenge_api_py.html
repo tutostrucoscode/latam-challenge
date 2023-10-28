@@ -102,13 +102,13 @@
     <p id="t48" class="pln"><span class="n"><a href="#t48">48</a></span><span class="t">        <span class="com"># Registra el error para poder ver los detalles en los logs del servidor</span>&nbsp;</span><span class="r"></span></p>
     <p id="t49" class="run"><span class="n"><a href="#t49">49</a></span><span class="t">        <span class="nam">logging</span><span class="op">.</span><span class="nam">error</span><span class="op">(</span><span class="fst">f"</span><span class="fst">Error al procesar la solicitud: </span><span class="op">{</span><span class="nam">e</span><span class="op">}</span><span class="fst">"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t50" class="pln"><span class="n"><a href="#t50">50</a></span><span class="t">        <span class="com"># Devuelve un mensaje de error descriptivo</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t51" class="run"><span class="n"><a href="#t51">51</a></span><span class="t">        <span class="key">raise</span> <span class="nam">HTTPException</span><span class="op">(</span><span class="nam">status_code</span><span class="op">=</span><span class="num">500</span><span class="op">,</span> <span class="nam">detail</span><span class="op">=</span><span class="nam">str</span><span class="op">(</span><span class="nam">e</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t51" class="run"><span class="n"><a href="#t51">51</a></span><span class="t">        <span class="key">raise</span> <span class="nam">HTTPException</span><span class="op">(</span><span class="nam">status_code</span><span class="op">=</span><span class="num">400</span><span class="op">,</span> <span class="nam">detail</span><span class="op">=</span><span class="nam">str</span><span class="op">(</span><span class="nam">e</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2023-10-28 19:06 +0100
+            created at 2023-10-28 19:28 +0100
         </p>
     </div>
 </div>
